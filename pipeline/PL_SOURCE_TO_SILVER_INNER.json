@@ -117,6 +117,8 @@
 			{
 				"name": "landiingtobronze",
 				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy data from postgres to alds",
