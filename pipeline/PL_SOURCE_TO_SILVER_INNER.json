@@ -5,6 +5,8 @@
 			{
 				"name": "read tables",
 				"type": "Lookup",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -29,12 +31,34 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "start time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "start time",
+					"value": {
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-dd_hh-mm-ss')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
 			"table_id": {
 				"type": "string",
 				"defaultValue": "1"
+			}
+		},
+		"variables": {
+			"start time": {
+				"type": "String"
 			}
 		},
 		"annotations": []
