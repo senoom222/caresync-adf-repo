@@ -52,13 +52,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "read tables",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "start time",
+						"activity": "Check Load type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -76,7 +70,7 @@
 					"source": {
 						"type": "PostgreSqlV2Source",
 						"query": {
-							"value": "select * from public.@{activity('read tables').output.firstRow.source_table_name}",
+							"value": "select * from public.@{activity('read tables').output.firstRow.source_table_name}\n@{\n    if(equals(activity('read tables').output.firstRow.load_type,'FULL'),'',\n    concat('where' ,activity('read tables').output.firstRow.watermark_column, '>','''',variables('watermark_value'),'''')) \n}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00"
@@ -190,6 +184,14 @@
 						"landing_timestamp": {
 							"value": "@variables('start time')",
 							"type": "Expression"
+						},
+						"merge_keys": {
+							"value": "@coalesce(activity('read tables').output.firstRow.merge_keys,'')",
+							"type": "Expression"
+						},
+						"load_type": {
+							"value": "@activity('read tables').output.firstRow.load_type",
+							"type": "Expression"
 						}
 					}
 				},
@@ -233,6 +235,135 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "Check Load type",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "read tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "start time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('read tables').output.firstRow.load_type,\r\n'FULL'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Read Watermark",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 2,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "select watermark_value from ctrl.watermark where table_id =\n@{pipeline().parameters.table_id}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "AzureSqlTable1",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "Watermark Value",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Read Watermark",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "watermark_value",
+								"value": {
+									"value": "@activity('Read Watermark').output.firstRow.watermark_value",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "check load type and update watermark",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "bronzetosilver",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('read tables').output.firstRow.load_type,\n'FULL'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "update the watermark",
+							"type": "Script",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "update ctrl.watermark set watermark_value = sysutcdatetime() where table_id = @{pipeline().parameters.table_id}",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -247,6 +378,9 @@
 		},
 		"variables": {
 			"start time": {
+				"type": "String"
+			},
+			"watermark_value": {
 				"type": "String"
 			}
 		},
