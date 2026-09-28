@@ -50,7 +50,7 @@
 					},
 					"activities": [
 						{
-							"name": "Read table id ",
+							"name": "Read table id",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
