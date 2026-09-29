@@ -80,6 +80,10 @@
 						"landing_timestamp": {
 							"value": "@variables('start time')",
 							"type": "Expression"
+						},
+						"source_file_format": {
+							"value": "@coalesce(activity('read tables').output.firstRow.source_file_format,'')",
+							"type": "Expression"
 						}
 					}
 				},
@@ -438,6 +442,10 @@
 											"referenceName": "ReadingCSVblob",
 											"type": "DatasetReference",
 											"parameters": {
+												"folder": {
+													"value": "@concat(\n    activity('read tables').output.firstRow.source_system,\n    '\\',\n    activity('read tables').output.firstRow.source_table_name,\n    '\\',\n    variables('start time'))",
+													"type": "Expression"
+												},
 												"container": "landing"
 											}
 										}
