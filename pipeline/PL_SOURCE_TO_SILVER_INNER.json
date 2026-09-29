@@ -50,8 +50,6 @@
 			{
 				"name": "landiingtobronze",
 				"type": "DatabricksNotebook",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "source system check",
@@ -97,8 +95,6 @@
 			{
 				"name": "bronzetosilver",
 				"type": "DatabricksNotebook",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "landiingtobronze",
