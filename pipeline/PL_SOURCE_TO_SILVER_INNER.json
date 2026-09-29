@@ -382,7 +382,68 @@
 							]
 						},
 						{
-							"value": "adls_csv"
+							"value": "adls_csv",
+							"activities": [
+								{
+									"name": "ingesting adls csv",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": false,
+												"modifiedDatetimeStart": {
+													"value": "@variables('watermark_value')",
+													"type": "Expression"
+												},
+												"deleteFilesAfterCompletion": false
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ReadingCSVblob",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder": {
+													"value": "@activity('read tables').output.firstRow.source_path",
+													"type": "Expression"
+												},
+												"container": "source"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ReadingCSVblob",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": "landing"
+											}
+										}
+									]
+								}
+							]
 						}
 					]
 				}
