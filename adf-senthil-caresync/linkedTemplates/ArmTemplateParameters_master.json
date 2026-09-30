@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adf-senthil-caresync"
 		},
+		"LS_AzureDatabricksnew_accessToken": {
+			"value": ""
+		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"value": "https://senthilcaresync-keyvalut.vault.azure.net/"
 		},
@@ -21,7 +24,7 @@
 			"value": "https://senthilcaresyncproject.dfs.core.windows.net/"
 		},
 		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
-			"value": "0928-060610-6uxfb7a3"
+			"value": "0930-032604-7wrkexzv"
 		},
 		"LS_PosgreSQL_properties_typeProperties_server": {
 			"value": "ep-dark-glitter-b34jg5sg-pooler.c-4.ap-southeast-1.aws.neon.tech"
@@ -31,6 +34,9 @@
 		},
 		"LS_PosgreSQL_properties_typeProperties_username": {
 			"value": "neondb_owner"
+		},
+		"LS_AzureDatabricksnew_properties_typeProperties_existingClusterId": {
+			"value": "0930-032604-7wrkexzv"
 		},
 		"containerUri": {
 			"value": ""

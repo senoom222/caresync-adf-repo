@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-senthil-caresync"
 		},
+		"LS_AzureDatabricksnew_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'LS_AzureDatabricksnew'"
+		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://senthilcaresync-keyvalut.vault.azure.net/"
@@ -29,7 +33,7 @@
 		},
 		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
 			"type": "string",
-			"defaultValue": "0928-060610-6uxfb7a3"
+			"defaultValue": "0930-032604-7wrkexzv"
 		},
 		"LS_PosgreSQL_properties_typeProperties_server": {
 			"type": "string",
@@ -42,6 +46,10 @@
 		"LS_PosgreSQL_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "neondb_owner"
+		},
+		"LS_AzureDatabricksnew_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0930-032604-7wrkexzv"
 		},
 		"containerUri": {
 			"type": "string",
@@ -70,11 +78,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"LS_AzureDatabricksnew_accessToken": {
+						"value": "[parameters('LS_AzureDatabricksnew_accessToken')]"
+					},
 					"AzureKeyVault1_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 					},
 					"LS_ADLS_properties_typeProperties_url": {
 						"value": "[parameters('LS_ADLS_properties_typeProperties_url')]"
+					},
+					"LS_AzureDatabricksnew_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('LS_AzureDatabricksnew_properties_typeProperties_existingClusterId')]"
 					},
 					"AzureSqlDatabase1_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
