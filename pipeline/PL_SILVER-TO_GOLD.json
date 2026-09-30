@@ -138,24 +138,6 @@
 								"notebookPath": {
 									"value": "/caresync-repo/adb-caresync-repo/Gold/@{item().gold_table_name}",
 									"type": "Expression"
-								},
-								"baseParameters": {
-									"source_system": {
-										"value": "@activity('read tables').output.firstRow.source_system",
-										"type": "Expression"
-									},
-									"table_name": {
-										"value": "@activity('read tables').output.firstRow.source_table_name",
-										"type": "Expression"
-									},
-									"landing_timestamp": {
-										"value": "@variables('start time')",
-										"type": "Expression"
-									},
-									"source_file_format": {
-										"value": "@coalesce(activity('read tables').output.firstRow.source_file_format,'')",
-										"type": "Expression"
-									}
 								}
 							},
 							"linkedServiceName": {
