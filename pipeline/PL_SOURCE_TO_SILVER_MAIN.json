@@ -147,6 +147,23 @@
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
 							}
+						},
+						{
+							"name": "Updated pipeline is failed",
+							"type": "Fail",
+							"dependsOn": [
+								{
+									"activity": "Ingest source to silver",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Inner Pipline Failed",
+								"errorCode": "500"
+							}
 						}
 					]
 				}
