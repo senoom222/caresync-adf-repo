@@ -50,6 +50,7 @@
 			},
 			{
 				"name": "gold",
+				"description": "consolidated pipeline description",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
