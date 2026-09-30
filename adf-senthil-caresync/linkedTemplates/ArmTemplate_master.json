@@ -35,6 +35,10 @@
 			"type": "string",
 			"defaultValue": "0930-032604-7wrkexzv"
 		},
+		"LS_AzureDatabricksnew_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0930-032604-7wrkexzv"
+		},
 		"LS_PosgreSQL_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "ep-dark-glitter-b34jg5sg-pooler.c-4.ap-southeast-1.aws.neon.tech"
@@ -46,10 +50,6 @@
 		"LS_PosgreSQL_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "neondb_owner"
-		},
-		"LS_AzureDatabricksnew_properties_typeProperties_existingClusterId": {
-			"type": "string",
-			"defaultValue": "0930-032604-7wrkexzv"
 		},
 		"containerUri": {
 			"type": "string",
