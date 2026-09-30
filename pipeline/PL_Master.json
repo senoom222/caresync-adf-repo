@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "neon_postgrestosilver",
+				"description": "updated another activity description",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
