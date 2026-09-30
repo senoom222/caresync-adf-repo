@@ -11,9 +11,10 @@
 					"referenceName": "AzureKeyVault1",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "ADB-Token"
+				"secretName": "ADB-Token",
+				"secretVersion": "c02fde0ecea5423986fc80313b987835"
 			},
-			"existingClusterId": "0928-060610-6uxfb7a3"
+			"existingClusterId": "0930-032604-7wrkexzv"
 		}
 	}
 }
