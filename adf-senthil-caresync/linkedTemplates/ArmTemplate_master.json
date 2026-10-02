@@ -31,6 +31,18 @@
 			"type": "string",
 			"defaultValue": "https://senthilcaresyncproject.dfs.core.windows.net/"
 		},
+		"LS_AZURESQLDB_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "product-demo.database.windows.net"
+		},
+		"LS_AZURESQLDB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "product-demo"
+		},
+		"LS_AZURESQLDB_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "senoom222"
+		},
 		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "0930-032604-7wrkexzv"
@@ -98,6 +110,15 @@
 					},
 					"AzureSqlDatabase1_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
+					},
+					"LS_AZURESQLDB_properties_typeProperties_server": {
+						"value": "[parameters('LS_AZURESQLDB_properties_typeProperties_server')]"
+					},
+					"LS_AZURESQLDB_properties_typeProperties_database": {
+						"value": "[parameters('LS_AZURESQLDB_properties_typeProperties_database')]"
+					},
+					"LS_AZURESQLDB_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AZURESQLDB_properties_typeProperties_userName')]"
 					},
 					"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
 						"value": "[parameters('LS_AzureDatabricks_properties_typeProperties_existingClusterId')]"

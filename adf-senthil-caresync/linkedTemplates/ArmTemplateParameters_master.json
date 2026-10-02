@@ -23,6 +23,15 @@
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://senthilcaresyncproject.dfs.core.windows.net/"
 		},
+		"LS_AZURESQLDB_properties_typeProperties_server": {
+			"value": "product-demo.database.windows.net"
+		},
+		"LS_AZURESQLDB_properties_typeProperties_database": {
+			"value": "product-demo"
+		},
+		"LS_AZURESQLDB_properties_typeProperties_userName": {
+			"value": "senoom222"
+		},
 		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
 			"value": "0930-032604-7wrkexzv"
 		},
