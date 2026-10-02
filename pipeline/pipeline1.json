@@ -24,7 +24,8 @@
 					"dataset": {
 						"referenceName": "DS_azuresqlproductcustomer",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -47,7 +48,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Readtables').output.firstRow",
+						"value": "@activity('Readtables').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -68,7 +69,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from dbo.@{activity('Readtables').output.firstRow.item()}",
+										"value": "select * from dbo.@{item().name}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
