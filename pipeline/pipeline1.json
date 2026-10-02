@@ -76,7 +76,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from dbo.@{item().name} where modifieddate >= @{activity('Watermark Date Value').output.firstRow.watermark_value}",
+										"value": "@concat(\n'select * from dbo.',\nitem().name,\n' where modifieddate >= ''',\nactivity('Watermark Date Value').output.firstRow.watermark_value,\n''''\n)",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -160,7 +160,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select watermark_value from metadata.table_watermarks where table_name = variables('tbl_name');",
+										"value": "@concat(\n'select watermark_value from metadata.table_watermarks where table_name = ''',\nvariables('tbl_name'),\n''''\n)",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -252,6 +252,42 @@
 						"value": "{\"table_name\":\"@{variables('tbl_name')}\"}",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "updating watermark",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "LS_AZURESQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat(\n'update metadata.table_watermarks ',\n'set watermark_value = CURRENT_TIMESTAMP ',\n'where table_name = ''',\nvariables('tbl_name'),\n''''\n)",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
