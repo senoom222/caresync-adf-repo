@@ -56,7 +56,14 @@
 						{
 							"name": "Copy data1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -69,7 +76,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from dbo.item().name",
+										"value": "select * from dbo.@{item().name}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -102,10 +109,33 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "product_dataset",
-									"type": "DatasetReference"
+									"referenceName": "Parquet2",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder": {
+											"value": "@concat(item().name,'\\',formatDateTime(utcNow(),'yyyyMMdd hh:mm:ss'))",
+											"type": "Expression"
+										}
+									}
 								}
 							]
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tbl_name",
+								"value": {
+									"value": "@{item().name}",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -130,6 +160,9 @@
 		],
 		"variables": {
 			"sys_datetime": {
+				"type": "String"
+			},
+			"tbl_name": {
 				"type": "String"
 			}
 		},
