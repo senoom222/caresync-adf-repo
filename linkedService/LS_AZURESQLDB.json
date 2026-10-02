@@ -1,0 +1,23 @@
+{
+	"name": "LS_AZURESQLDB",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "product-demo.database.windows.net",
+			"database": "product-demo",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "senoom222",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AzureSQLDB"
+			}
+		}
+	}
+}
