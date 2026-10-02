@@ -58,7 +58,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Set variable2",
+									"activity": "Watermark Date Value",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -76,7 +76,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from dbo.@{item().name}",
+										"value": "select * from dbo.@{item().name} where modifieddate >= @{activity('Watermark Date Value').output.firstRow.watermark_value}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -134,6 +134,41 @@
 								"value": {
 									"value": "@{item().name}",
 									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Watermark Date Value",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "select watermark_value from metadata.table_watermarks where table_name = variables('tbl_name');",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "DS_azuresqlproductcustomer",
+									"type": "DatasetReference"
 								}
 							}
 						}
