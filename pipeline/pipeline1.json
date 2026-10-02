@@ -183,7 +183,7 @@
 					},
 					"url": "https://prod-06.centralindia.logic.azure.com:443/workflows/9fadff46a2384c2fba8769bfb699b4ae/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=S4OKiPRYy0IaOSt-7PEWJh4eHYOaFCciVsENi9C6k0k",
 					"body": {
-						"value": "{\"table_name\": \"activity('Readtables').output.name\"}",
+						"value": "{\"table_name\": @{activity('Copy data1').output.name}}",
 						"type": "Expression"
 					}
 				}
