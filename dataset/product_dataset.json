@@ -1,0 +1,19 @@
+{
+	"name": "product_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "productdemo"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

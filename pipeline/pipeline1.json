@@ -36,10 +36,21 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Readtables').output.firstRow",
+						"type": "Expression"
+					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Copy data1",
@@ -57,27 +68,67 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "select * from dbo.@{pipeline().parameters.dynamictables}",
+										"value": "select * from dbo.@{activity('Readtables').output.firstRow.item()}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "DS_azuresqlproductcustomer",
 									"type": "DatasetReference"
 								}
+							],
+							"outputs": [
+								{
+									"referenceName": "product_dataset",
+									"type": "DatasetReference"
+								}
 							]
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "sys_datetime",
+					"value": {
+						"value": "@formatDateTime(utcNow(),'yyyy-MM-dd_hh-mm-ss')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
-		"parameters": {
-			"dynamictables": {
+		"variables": {
+			"sys_datetime": {
 				"type": "String"
 			}
 		},
