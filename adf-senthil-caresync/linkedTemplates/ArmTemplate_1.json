@@ -369,6 +369,7 @@
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/inputsrc/blobs/source",
+					"blobPathEndsWith": ".txt",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('firsttrigger_properties_typeProperties_scope')]",
 					"events": [
