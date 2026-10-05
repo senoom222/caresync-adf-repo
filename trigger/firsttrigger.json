@@ -20,6 +20,7 @@
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/inputsrc/blobs/source",
+			"blobPathEndsWith": ".txt",
 			"ignoreEmptyBlobs": true,
 			"scope": "/subscriptions/5f10f480-4b82-4b5e-99d8-4a5e4d3110b5/resourceGroups/rg_caresync/providers/Microsoft.Storage/storageAccounts/senthilcaresyncproject",
 			"events": [
