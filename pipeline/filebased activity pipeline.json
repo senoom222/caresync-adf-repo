@@ -5,6 +5,8 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -24,7 +26,7 @@
 								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							},
-							"wildcardFileName": "a1.txt",
+							"wildcardFileName": "a*.txt",
 							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
@@ -44,11 +46,11 @@
 						"referenceName": "DS_Binary_source",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.container",
+							"source_container": {
+								"value": "@pipeline().parameters.source_container",
 								"type": "Expression"
 							},
-							"source": {
+							"source_folder": {
 								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							}
@@ -60,27 +62,69 @@
 						"referenceName": "DS_Binary_Target",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.container",
+							"target_container": {
+								"value": "@pipeline().parameters.target_container",
 								"type": "Expression"
 							},
-							"folder": {
+							"target_folder": {
 								"value": "@pipeline().parameters.target",
 								"type": "Expression"
 							}
 						}
 					}
 				]
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_Binary_source",
+						"type": "DatasetReference",
+						"parameters": {
+							"source_container": {
+								"value": "@pipeline().parameters.source_container",
+								"type": "Expression"
+							},
+							"source_folder": {
+								"value": "@pipeline().parameters.source",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
 			}
 		],
 		"parameters": {
-			"container": {
+			"source_container": {
 				"type": "string"
 			},
 			"source": {
 				"type": "string"
 			},
 			"target": {
+				"type": "string"
+			},
+			"target_container": {
 				"type": "string"
 			}
 		},
