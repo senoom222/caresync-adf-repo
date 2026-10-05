@@ -24,7 +24,7 @@
 								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							},
-							"wildcardFileName": ".txt",
+							"wildcardFileName": "*.txt",
 							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
