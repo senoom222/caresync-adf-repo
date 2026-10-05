@@ -24,7 +24,7 @@
 								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							},
-							"wildcardFileName": "a*.txt",
+							"wildcardFileName": ".txt",
 							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
@@ -106,6 +106,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
