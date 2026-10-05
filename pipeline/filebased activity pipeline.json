@@ -21,7 +21,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.folder",
+								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							},
 							"wildcardFileName": "a1.txt",
@@ -41,11 +41,15 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_Binary",
+						"referenceName": "DS_Binary_source",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
 								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
+							"source": {
+								"value": "@pipeline().parameters.source",
 								"type": "Expression"
 							}
 						}
@@ -53,7 +57,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Binary1",
+						"referenceName": "DS_Binary_Target",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
@@ -61,7 +65,7 @@
 								"type": "Expression"
 							},
 							"folder": {
-								"value": "@pipeline().parameters.folder",
+								"value": "@pipeline().parameters.target",
 								"type": "Expression"
 							}
 						}
@@ -73,7 +77,10 @@
 			"container": {
 				"type": "string"
 			},
-			"folder": {
+			"source": {
+				"type": "string"
+			},
+			"target": {
 				"type": "string"
 			}
 		},
