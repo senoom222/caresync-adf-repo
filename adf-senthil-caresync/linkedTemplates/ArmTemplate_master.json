@@ -63,6 +63,26 @@
 			"type": "string",
 			"defaultValue": "neondb_owner"
 		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source_container": {
+			"type": "string",
+			"defaultValue": "inputsrc"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target": {
+			"type": "string",
+			"defaultValue": "target"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target_container": {
+			"type": "string",
+			"defaultValue": "outputsrc"
+		},
+		"firsttrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5f10f480-4b82-4b5e-99d8-4a5e4d3110b5/resourceGroups/rg_caresync/providers/Microsoft.Storage/storageAccounts/senthilcaresyncproject"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -135,6 +155,41 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "adf-senthil-caresync_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"firsttrigger_properties_filebased activity pipeline_parameters_source_container": {
+						"value": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_source_container')]"
+					},
+					"firsttrigger_properties_filebased activity pipeline_parameters_source": {
+						"value": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_source')]"
+					},
+					"firsttrigger_properties_filebased activity pipeline_parameters_target": {
+						"value": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_target')]"
+					},
+					"firsttrigger_properties_filebased activity pipeline_parameters_target_container": {
+						"value": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_target_container')]"
+					},
+					"firsttrigger_properties_typeProperties_scope": {
+						"value": "[parameters('firsttrigger_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-senthil-caresync_ArmTemplate_0')]"
+			]
 		}
 	]
 }

@@ -47,6 +47,21 @@
 		"LS_PosgreSQL_properties_typeProperties_username": {
 			"value": "neondb_owner"
 		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source_container": {
+			"value": "inputsrc"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source": {
+			"value": "source"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target": {
+			"value": "target"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target_container": {
+			"value": "outputsrc"
+		},
+		"firsttrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/5f10f480-4b82-4b5e-99d8-4a5e4d3110b5/resourceGroups/rg_caresync/providers/Microsoft.Storage/storageAccounts/senthilcaresyncproject"
+		},
 		"containerUri": {
 			"value": ""
 		},

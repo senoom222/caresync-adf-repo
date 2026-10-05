@@ -62,6 +62,26 @@
 		"LS_PosgreSQL_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "neondb_owner"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source_container": {
+			"type": "string",
+			"defaultValue": "inputsrc"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_source": {
+			"type": "string",
+			"defaultValue": "source"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target": {
+			"type": "string",
+			"defaultValue": "target"
+		},
+		"firsttrigger_properties_filebased activity pipeline_parameters_target_container": {
+			"type": "string",
+			"defaultValue": "outputsrc"
+		},
+		"firsttrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5f10f480-4b82-4b5e-99d8-4a5e4d3110b5/resourceGroups/rg_caresync/providers/Microsoft.Storage/storageAccounts/senthilcaresyncproject"
 		}
 	},
 	"variables": {
@@ -1079,7 +1099,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/sqlserver pipeline with all related activity')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1141,7 +1161,7 @@
 									"type": "Copy",
 									"dependsOn": [
 										{
-											"activity": "Set variable2",
+											"activity": "Watermark Date Value",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -1159,7 +1179,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "select * from dbo.@{item().name}",
+												"value": "@concat(\n'select * from dbo.',\nitem().name,\n' where modifieddate >= ''',\nactivity('Watermark Date Value').output.firstRow.watermark_value,\n''''\n)",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -1218,6 +1238,42 @@
 										"value": {
 											"value": "@{item().name}",
 											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Watermark Date Value",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "Set variable2",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@concat(\n'select watermark_value from metadata.table_watermarks where table_name = ''',\nvariables('tbl_name'),\n''''\n)",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "DS_azuresqlproductcustomer",
+											"type": "DatasetReference",
+											"parameters": {}
 										}
 									}
 								}
@@ -1302,6 +1358,42 @@
 								"type": "Expression"
 							}
 						}
+					},
+					{
+						"name": "updating watermark",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "LS_AZURESQLDB",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'update metadata.table_watermarks ',\n'set watermark_value = CURRENT_TIMESTAMP ',\n'where table_name = ''',\nvariables('tbl_name'),\n''''\n)",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
@@ -1319,6 +1411,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_azuresqlproductcustomer')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AZURESQLDB')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet2')]"
 			]
 		},
@@ -1665,6 +1758,295 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/filebased activity pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.source",
+										"type": "Expression"
+									},
+									"wildcardFileName": "a*.txt",
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_Binary_source",
+								"type": "DatasetReference",
+								"parameters": {
+									"source_container": {
+										"value": "@pipeline().parameters.source_container",
+										"type": "Expression"
+									},
+									"source_folder": {
+										"value": "@pipeline().parameters.source",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_Binary_Target",
+								"type": "DatasetReference",
+								"parameters": {
+									"target_container": {
+										"value": "@pipeline().parameters.target_container",
+										"type": "Expression"
+									},
+									"target_folder": {
+										"value": "@pipeline().parameters.target",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "DS_Binary_source",
+								"type": "DatasetReference",
+								"parameters": {
+									"source_container": {
+										"value": "@pipeline().parameters.source_container",
+										"type": "Expression"
+									},
+									"source_folder": {
+										"value": "@pipeline().parameters.source",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"source_container": {
+						"type": "string"
+					},
+					"source": {
+						"type": "string"
+					},
+					"target": {
+						"type": "string"
+					},
+					"target_container": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Binary_source')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Binary_Target')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Binary_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"source_container": {
+						"type": "String"
+					},
+					"source_folder": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().source_folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().source_container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Binary_Target')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"target_container": {
+						"type": "string"
+					},
+					"target_folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().target_folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().target_container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binary1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder": {
+						"type": "String"
+					},
+					"file_name": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().file_name",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"fileSystem": "inputsrc"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/firsttrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "filebased activity pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"source_container": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_source_container')]",
+							"source": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_source')]",
+							"target": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_target')]",
+							"target_container": "[parameters('firsttrigger_properties_filebased activity pipeline_parameters_target_container')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/inputsrc/blobs/source",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('firsttrigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/filebased activity pipeline')]"
 			]
 		}
 	]
