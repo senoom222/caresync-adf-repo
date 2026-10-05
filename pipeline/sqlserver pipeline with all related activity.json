@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "sqlserver pipeline with all related activity",
 	"properties": {
 		"activities": [
 			{
