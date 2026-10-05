@@ -12,6 +12,7 @@
 				"parameters": {
 					"source_container": "inputsrc",
 					"source": "source",
+					"target": "target",
 					"target_container": "outputsrc"
 				}
 			}
