@@ -1,0 +1,29 @@
+{
+	"name": "firsttrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "filebased activity pipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"source_container": "inputsrc",
+					"source": "source",
+					"target_container": "outputsrc"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/inputsrc/blobs/source",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/5f10f480-4b82-4b5e-99d8-4a5e4d3110b5/resourceGroups/rg_caresync/providers/Microsoft.Storage/storageAccounts/senthilcaresyncproject",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
