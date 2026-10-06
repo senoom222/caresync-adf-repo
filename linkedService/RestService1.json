@@ -4,12 +4,15 @@
 		"parameters": {
 			"API": {
 				"type": "String"
+			},
+			"relativeurl": {
+				"type": "String"
 			}
 		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "@{linkedService().API}",
+			"url": "@{linkedService().relativeurl}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
