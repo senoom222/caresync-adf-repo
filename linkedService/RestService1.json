@@ -1,16 +1,10 @@
 {
 	"name": "RestService1",
 	"properties": {
-		"parameters": {
-			"relativeurl": {
-				"type": "String",
-				"defaultValue": "products"
-			}
-		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://dummyjson.com/@{linkedService().relativeurl}",
+			"url": "https://dummyjson.com/",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
