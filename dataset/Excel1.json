@@ -1,0 +1,22 @@
+{
+	"name": "Excel1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Config file.xlsx",
+				"folderPath": "apiconfig",
+				"fileSystem": "source"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
