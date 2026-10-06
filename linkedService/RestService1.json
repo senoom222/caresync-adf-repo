@@ -1,6 +1,12 @@
 {
 	"name": "RestService1",
 	"properties": {
+		"parameters": {
+			"baseurl": {
+				"type": "string",
+				"defaultValue": "https://dummyjson.com/"
+			}
+		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
