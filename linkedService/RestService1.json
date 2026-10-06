@@ -2,14 +2,14 @@
 	"name": "RestService1",
 	"properties": {
 		"parameters": {
-			"Purpose": {
+			"API": {
 				"type": "String"
 			}
 		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://dummyjson.com/",
+			"url": "@{linkedService().API}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
