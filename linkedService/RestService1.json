@@ -1,6 +1,11 @@
 {
 	"name": "RestService1",
 	"properties": {
+		"parameters": {
+			"RelativeUrl": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
