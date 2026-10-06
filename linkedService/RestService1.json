@@ -10,7 +10,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://dummyjson.com/",
+			"url": "@{linkedService().baseurl}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
