@@ -44,15 +44,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Config Read').output.value",
+						"value": "@activity('Config Read').output.API",
 						"type": "Expression"
 					},
 					"activities": [
 						{
 							"name": "Ingest API",
 							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
